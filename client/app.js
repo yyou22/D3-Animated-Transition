@@ -2,15 +2,17 @@ import './assets/scss/app.scss'
 
 //jq -s '.[0] * .[1]' links.json nodes.json > data.json
 
-var $ = require('jquery')
-var d3 = require('d3')
+var $ = require('jquery');
+var d3 = require('d3');
+var mode = 0;
 
 $(document).ready(function() {
 
     var width = 1200;
     var height = 1200;
 
-    var svg = d3.select('.canvas')
+    var svg1 = d3.select('.canvas1')
+    var svg2 = d3.select('.canvas2')
 
     $.getJSON('/data/data.json', function(data){
 
@@ -32,7 +34,7 @@ $(document).ready(function() {
                             .force("linkForce",linkForce)
                             .force("center", d3.forceCenter(600, 600));
 
-        var link = svg
+        var link = svg1
             .selectAll(".link")
             .data(data.links)
             .enter()
@@ -40,13 +42,14 @@ $(document).ready(function() {
                 .style("stroke", "#BB6A9A")
                 .attr("stroke-width", 0.5)
 
-        var node = svg
+        var node = svg1
             .selectAll("circle")
             .data(data.nodes)
             .enter()
             .append("circle")
                 .attr("r", 6)
                 .attr("stroke", "#691A45")
+                .attr("og", 1)
                 .attr("stroke-width", 1)
                 .style("fill", "#69b3a2")
                 .call(d3.drag()
@@ -92,6 +95,8 @@ $(document).ready(function() {
 
         data.nodes.forEach( function(node) {
 
+            node.count = 0;
+
             matrix[node.index] = d3.range(total_items).map(item_index => {
                 return {
                     x: item_index,
@@ -113,7 +118,7 @@ $(document).ready(function() {
         var matrixScale = d3.scaleBand().range([50, width-50]).domain(d3.range(total_items));
         var opacityScale = d3.scaleLinear().domain([0, 10]).range([0.3, 1.0]).clamp(true);
 
-        var rows = svg.selectAll(".row")
+        var rows = svg2.selectAll(".row")
                         .data(matrix)
                         .enter().append("g")
                         .attr("class", "row")
@@ -122,15 +127,24 @@ $(document).ready(function() {
                         });
 
         var squares = rows.selectAll(".cell")
-                        .data(d => d.filter(item => item.z > 0))
+                        .data(d => d.filter(item => item.z >= 0))
                         .enter().append("rect")
                         .attr("class", "cell")
                         .attr("x", d => matrixScale(d.x))
                         .attr("width", matrixScale.bandwidth())
                         .attr("height", matrixScale.bandwidth())
-                        .style("fill-opacity", d => opacityScale(d.z)).style("fill", "purple")
+                        .style("fill-opacity", d => opacityScale(d.z))
+                        .style("fill", function(d) {
+                            if (matrix[d.x][d.y].z > 0) {
+                                return "purple";
+                            };
+                            if (matrix[d.y][d.x].z > 0) {
+                                return "purple";
+                            };
+                            return "white";
+                        })
 
-        var columns = svg.selectAll(".column")
+        var columns = svg2.selectAll(".column")
                         .data(matrix)
                         .enter().append("g")
                         .attr("class", "column")
@@ -146,6 +160,65 @@ $(document).ready(function() {
             .attr("text-anchor", "end")
             .attr("font-size","5px")
             .text((d, i) => data.nodes[i].Id);
+
+        columns.append("text")
+            .attr("class", "label")
+            .attr("x", -35)
+            .attr("y", matrixScale.bandwidth() / 2)
+            .attr("dy", ".32em")
+            .attr("text-anchor", "end")
+            .attr("font-size","5px")
+            .text((d, i) => data.nodes[i].Id);
+
+        d3.select("#trans").on("click", function() {
+
+            //stop the force
+            simulation.stop();
+
+            svg1.selectAll("line").remove()
+
+            svg1.selectAll("circle").on(".drag", null);
+            svg1.selectAll("circle")
+                    .transition()
+                    .duration(1000)
+                    .attr("cx", 40)
+                    .attr("cy", 40)
+
+            data.nodes.forEach(function(node) {
+                svg1.append("circle")
+                        .attr("r", 6)
+                        .attr("stroke", "#691A45")
+                        .attr("og", 0)
+                        .attr("stroke-width", 1)
+                        .style("fill", "#69b3a2")
+                        .attr("cx", 40)
+                        .attr("cy", 40)
+            })
+
+            svg1.selectAll("circle")
+                    .filter(function() {
+                        return d3.select(this).attr("og") == 1;
+                    })
+                    .transition()
+                    .delay(1000)
+                    .duration(2000)
+                    .attr("cy", function(d, i) {
+                        return matrixScale(i);
+                    })
+
+            svg1.selectAll("circle")
+                    .filter(function() {
+                        return d3.select(this).attr("og") == 0;
+                    })
+                    .transition()
+                    .delay(1000)
+                    .duration(2000)
+                    .attr("cx", function(d, i) {
+                        return matrixScale(i);
+                    })
+
+        });
+
     });
 
 })
