@@ -25,7 +25,7 @@ $(document).ready(function() {
             link.target = nodeById.get(link.Target);
         });
 
-        var linkForce  = d3.forceLink(data.links).distance(150).strength(2);
+        var linkForce  = d3.forceLink(data.links).distance(200);
 
         var simulation = d3.forceSimulation(data.nodes)
                             .alphaDecay(0.01)
@@ -37,7 +37,8 @@ $(document).ready(function() {
             .data(data.links)
             .enter()
             .append("line")
-                .style("stroke", "#000000")
+                .style("stroke", "#BB6A9A")
+                .attr("stroke-width", 0.5)
 
         var node = svg
             .selectAll("circle")
@@ -45,7 +46,31 @@ $(document).ready(function() {
             .enter()
             .append("circle")
                 .attr("r", 6)
+                .attr("stroke", "#691A45")
+                .attr("stroke-width", 1)
                 .style("fill", "#69b3a2")
+                .call(d3.drag()
+                .on("start",dragstarted)
+                .on("drag",dragged)
+                .on("end",dragended));
+
+        function dragstarted(d) {
+           simulation.restart();
+           simulation.alpha(0.7);
+           d.fx = d.x;
+           d.fy = d.y;
+        }
+
+        function dragged(d) {
+           d.fx = d3.event.x;
+           d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+           d.fx = null;
+           d.fy = null;
+           simulation.alphaTarget(0.1);
+        }
 
         function ticked(){
             link
