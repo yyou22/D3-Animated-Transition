@@ -7,6 +7,9 @@ var d3 = require('d3')
 
 $(document).ready(function() {
 
+    var width = 800;
+    var height = 800;
+
     var svg = d3.select('.canvas')
 
     $.getJSON('/data/data.json', function(data){
@@ -22,6 +25,13 @@ $(document).ready(function() {
             link.target = nodeById.get(link.Target);
         });
 
+        var linkForce  = d3.forceLink(data.links).distance(150).strength(2);
+
+        var simulation = d3.forceSimulation(data.nodes)
+                            .alphaDecay(0.01)
+                            .force("linkForce",linkForce)
+                            .force("center", d3.forceCenter(400, 400));
+
         var link = svg
             .selectAll(".link")
             .data(data.links)
@@ -34,19 +44,10 @@ $(document).ready(function() {
             .data(data.nodes)
             .enter()
             .append("circle")
-                .attr("r", 5)
+                .attr("r", 6)
                 .style("fill", "#69b3a2")
 
-        var simulation = d3.forceSimulation(data.nodes)
-            .force("link", d3.forceLink()
-                    .id(function(d) {return d.Id;})
-                    .links(data.links)
-            )
-            .force("charge", d3.forceManyBody().strength(-10))
-            .force("center", d3.forceCenter(400, 400))
-            .on("end", ticked);
-
-        function ticked() {
+        function ticked(){
             link
                 .attr("x1", function(d) { return d.source.x; })
                 .attr("y1", function(d) { return d.source.y; })
@@ -56,7 +57,9 @@ $(document).ready(function() {
             node
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function(d) { return d.y; });
-        }
+        };
+
+        simulation.on("tick",ticked);
 
     });
 
