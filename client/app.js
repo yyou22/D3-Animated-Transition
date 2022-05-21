@@ -171,7 +171,7 @@ $(document).ready(function() {
             .text((d, i) => data.nodes[i].Id);
 
         //button transition
-        d3.select("#trans").on("click", function() {
+        d3.select("#trans1").on("click", function() {
 
             if (mode == 0) {
                 //stop the force
@@ -250,10 +250,17 @@ $(document).ready(function() {
                     .delay(4000)
                     .remove()
 
-                mode = 1
+                    setTimeout(function(){
+                        mode = 1
+                    }, 4500);
 
             }
-            else {
+
+        });
+
+        d3.select("#trans2").on("click", function() {
+
+            if (mode == 1) {
 
                 svg1.transition()
                     .duration(1000)
@@ -270,14 +277,23 @@ $(document).ready(function() {
 
                 simulation.restart();
 
+                svg1.selectAll("circle")
+                    .call(d3.drag()
+                    .on("start",dragstarted)
+                    .on("drag",dragged)
+                    .on("end",dragended));
+
                 svg1.selectAll("line")
                     .transition()
-                    .delay(1000)
+                    .delay(1500)
+                    .duration(1)
                     .style("opacity", 10)
 
-                mode = 0
+                setTimeout(function(){
+                    mode = 0
+                }, 2000);
 
-            }
+            };
 
         });
 
