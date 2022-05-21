@@ -141,16 +141,16 @@ $(document).ready(function() {
                             if (matrix[d.y][d.x].z > 0) {
                                 return "purple";
                             };
-                            return "white";
-                        })
+                                return "white";
+                            })
 
         var columns = svg2.selectAll(".column")
-                        .data(matrix)
-                        .enter().append("g")
-                        .attr("class", "column")
-                        .attr("transform", (d, i) => {
-                            return "translate(" + matrixScale(i) + ")rotate(-90)";
-                        });
+                            .data(matrix)
+                            .enter().append("g")
+                            .attr("class", "column")
+                            .attr("transform", (d, i) => {
+                                return "translate(" + matrixScale(i) + ")rotate(-90)";
+                            });
 
         rows.append("text")
             .attr("class", "label")
@@ -170,22 +170,20 @@ $(document).ready(function() {
             .attr("font-size","5px")
             .text((d, i) => data.nodes[i].Id);
 
+        //button transition
         d3.select("#trans").on("click", function() {
 
-            //stop the force
-            simulation.stop();
+            if (mode == 0) {
+                //stop the force
+                simulation.stop();
 
-            svg1.selectAll("line").remove()
+                //svg1.selectAll("line").remove()
+                svg1.selectAll("line").style("opacity", 0)
 
-            svg1.selectAll("circle").on(".drag", null);
-            svg1.selectAll("circle")
-                    .transition()
-                    .duration(1000)
-                    .attr("cx", 40)
-                    .attr("cy", 40)
+                svg1.selectAll("circle").on(".drag", null);
 
-            data.nodes.forEach(function(node) {
-                svg1.append("circle")
+                data.nodes.forEach(function(node) {
+                    svg1.append("circle")
                         .attr("r", 6)
                         .attr("stroke", "#691A45")
                         .attr("og", 0)
@@ -193,9 +191,24 @@ $(document).ready(function() {
                         .style("fill", "#69b3a2")
                         .attr("cx", 40)
                         .attr("cy", 40)
-            })
+                        .style("fill-opacity", 0)
+                        .style("opacity", 0)
+                })
 
-            svg1.selectAll("circle")
+                svg1.selectAll("circle")
+                    .transition()
+                    .duration(1000)
+                    .attr("cx", 40)
+                    .attr("cy", 40)
+
+                svg1.selectAll("circle")
+                    .transition()
+                    .delay(1000)
+                    .duration(1)
+                    .style("fill-opacity", 10)
+                    .style("opacity", 10)
+
+                svg1.selectAll("circle")
                     .filter(function() {
                         return d3.select(this).attr("og") == 1;
                     })
@@ -206,7 +219,7 @@ $(document).ready(function() {
                         return matrixScale(i);
                     })
 
-            svg1.selectAll("circle")
+                svg1.selectAll("circle")
                     .filter(function() {
                         return d3.select(this).attr("og") == 0;
                     })
@@ -217,7 +230,58 @@ $(document).ready(function() {
                         return matrixScale(i);
                     })
 
+                svg1.selectAll("circle")
+                    .transition()
+                    .delay(3000)
+                    .duration(1000)
+                    .style("fill-opacity", 0)
+                    .style("opacity", 0)
+
+                svg1.transition()
+                    .delay(3000)
+                    .duration(1000)
+                    .style("opacity", 0)
+
+                svg1.selectAll("circle")
+                    .filter(function() {
+                        return d3.select(this).attr("og") == 0;
+                    })
+                    .transition()
+                    .delay(4000)
+                    .remove()
+
+                mode = 1
+
+            }
+            else {
+
+                svg1.transition()
+                    .duration(1000)
+                    .style("opacity", 10)
+
+                //stop the force
+
+                svg1.selectAll("circle")
+                    .transition()
+                    .delay(1000)
+                    .duration(1000)
+                    .style("fill-opacity", 10)
+                    .style("opacity", 10)
+
+                simulation.restart();
+
+                svg1.selectAll("line")
+                    .transition()
+                    .delay(1000)
+                    .style("opacity", 10)
+
+                mode = 0
+
+            }
+
         });
+
+
 
     });
 
