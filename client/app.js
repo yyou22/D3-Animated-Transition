@@ -75,7 +75,7 @@ $(document).ready(function() {
 
         });
 
-        var myColor = d3.scaleLinear().domain([1, 10]).range(["#BE638B", "#AF3168"])
+        var myColor = d3.scaleLinear().domain([1, 5]).range(["#BE638B", "#AF3168"])
 
         var link = svg1
             .selectAll(".link")
@@ -96,6 +96,12 @@ $(document).ready(function() {
                 .attr("og", 1)
                 .attr("stroke-width", 5)
                 .style("fill", "#006E7F")
+                .on("mouseover", function(d, i) {
+                    d3.select(this).attr("r", 20)
+                })
+                .on("mouseout", function(d, i) {
+                    d3.select(this).attr("r", 10)
+                })
                 .call(d3.drag()
                 .on("start",dragstarted)
                 .on("drag",dragged)
@@ -201,7 +207,7 @@ $(document).ready(function() {
                 //svg1.selectAll("line").remove()
                 svg1.selectAll("line").style("opacity", 0)
 
-                svg1.selectAll("circle").on(".drag", null);
+                svg1.selectAll("circle").on(".drag", null).on("mouseover", null).on("mouseout", null)
 
                 data.nodes.forEach(function(node) {
                     svg1.append("circle")
@@ -278,7 +284,7 @@ $(document).ready(function() {
 
             if (mode == 1) {
 
-                mode = 1
+                mode = 2
 
                 svg1.selectAll("circle")
                     .transition()
