@@ -98,9 +98,25 @@ $(document).ready(function() {
                 .style("fill", "#006E7F")
                 .on("mouseover", function(d, i) {
                     d3.select(this).attr("r", 20).style("fill", "#F8B400")
+                    d3.select('.canvas1')
+                        .append('text')
+                        .attr("id", "l" + i)
+                        .attr('x', 30)
+                        .attr('y', 50)
+                        .text("Label: " + String(d.Label))
+                        .style("font-size", "34px")
+                    d3.select('.canvas1')
+                        .append('text')
+                        .attr("id", "d" + i)
+                        .attr('x', 30)
+                        .attr('y', 100)
+                        .text("Id: " + String(d.Id))
+                        .style("font-size", "34px")
                 })
                 .on("mouseout", function(d, i) {
                     d3.select(this).attr("r", 10).style("fill", "#006E7F")
+                    d3.select("#l" + i).remove();
+                    d3.select("#d" + i).remove();
                 })
                 .call(d3.drag()
                 .on("start",dragstarted)
@@ -334,6 +350,28 @@ $(document).ready(function() {
                         .remove()
                     simulation.restart();
                     svg1.selectAll("circle")
+                        .on("mouseover", function(d, i) {
+                            d3.select(this).attr("r", 20).style("fill", "#F8B400")
+                            d3.select('.canvas1')
+                                .append('text')
+                                .attr("id", "l" + i)
+                                .attr('x', 30)
+                                .attr('y', 50)
+                                .text("Label: " + String(d.Label))
+                                .style("font-size", "34px")
+                            d3.select('.canvas1')
+                                .append('text')
+                                .attr("id", "d" + i)
+                                .attr('x', 30)
+                                .attr('y', 100)
+                                .text("Id: " + String(d.Id))
+                                .style("font-size", "34px")
+                        })
+                        .on("mouseout", function(d, i) {
+                            d3.select(this).attr("r", 10).style("fill", "#006E7F")
+                            d3.select("#l" + i).remove();
+                            d3.select("#d" + i).remove();
+                        })
                         .call(d3.drag()
                         .on("start",dragstarted)
                         .on("drag",dragged)
