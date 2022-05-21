@@ -97,10 +97,10 @@ $(document).ready(function() {
                 .attr("stroke-width", 5)
                 .style("fill", "#006E7F")
                 .on("mouseover", function(d, i) {
-                    d3.select(this).attr("r", 20)
+                    d3.select(this).attr("r", 20).style("fill", "#F8B400")
                 })
                 .on("mouseout", function(d, i) {
-                    d3.select(this).attr("r", 10)
+                    d3.select(this).attr("r", 10).style("fill", "#006E7F")
                 })
                 .call(d3.drag()
                 .on("start",dragstarted)
