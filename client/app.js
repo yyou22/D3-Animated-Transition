@@ -1,5 +1,6 @@
 import './assets/scss/app.scss'
 
+//command for combining two json files
 //jq -s '.[0] * .[1]' links.json nodes.json > data.json
 
 var $ = require('jquery');
@@ -304,17 +305,17 @@ $(document).ready(function() {
 
                 svg1.selectAll("circle")
                     .transition()
-                    .duration(1000)
+                    .duration(2000)
                     .style("fill-opacity", 1)
                     .style("opacity", 1)
 
                 svg1.transition()
-                    .duration(1000)
+                    .duration(2000)
                     .style("opacity", 10)
 
                 svg1.selectAll("circle")
                     .transition()
-                    .delay(1000)
+                    .delay(2000)
                     .duration(1000)
                     .attr("cx", 40)
                     .attr("cy", 40)
@@ -322,7 +323,7 @@ $(document).ready(function() {
 
                 svg1.selectAll("circle")
                     .transition()
-                    .delay(2000)
+                    .delay(3000)
                     .duration(1000)
                     .attr("cx", 600)
                     .attr("cy", 600)
@@ -331,14 +332,14 @@ $(document).ready(function() {
 
                 svg1.selectAll("circle")
                     .transition()
-                    .delay(3000)
+                    .delay(4000)
                     .duration(1000)
                     .style("fill-opacity", 1)
                     .style("opacity", 1)
 
                 svg1.selectAll("line")
                     .transition()
-                    .delay(3000)
+                    .delay(4000)
                     .duration(1000)
                     .style("opacity", 1)
 
@@ -348,6 +349,9 @@ $(document).ready(function() {
                             return d3.select(this).attr("og") == 0;
                         })
                         .remove()
+                }, 3000);
+
+                setTimeout(function(){
                     simulation.restart();
                     svg1.selectAll("circle")
                         .on("mouseover", function(d, i) {
@@ -376,11 +380,11 @@ $(document).ready(function() {
                         .on("start",dragstarted)
                         .on("drag",dragged)
                         .on("end",dragended));
-                }, 3000);
+                }, 4000);
 
                 setTimeout(function(){
                     mode = 0
-                }, 3000);
+                }, 5000);
 
             };
 
