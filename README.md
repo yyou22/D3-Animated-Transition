@@ -27,3 +27,15 @@ In comparison to the previous D3 exercises, there was an additional design proce
 * Note: You will need to install NodeJS in order to run this code. lease also note that this web app does not work with NodeJS 16. In order to run the application, you may need to downgrade Node to an earlier version like NodeJS 14.
 
 # External Resources
+
+[Managing colors in d3.js](https://d3-graph-gallery.com/graph/custom_color.html)
+
+[Bar Chart Example](https://bl.ocks.org/anonymous/bc5a9691a3417b403d4e8ade3297afa3/3a2434c1c2849e476791e581754ec27e055db4d6)
+
+[Link Forces](https://bl.ocks.org/rsk2327/2ebd7f00d43b492e64eee14f35babeac)
+
+[Netwrok Graph](https://d3-graph-gallery.com/graph/network_basic.html)
+
+[D3 Link](https://bl.ocks.org/pram/fb6975acc5de7c24de560def3eecb23a)
+
+[Co-occurrence Matrix](https://towardsdatascience.com/building-a-co-occurrence-matrix-with-d3-to-analyze-overlapping-topics-in-dissertations-fb2ae9470dee)
